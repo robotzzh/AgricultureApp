@@ -90,14 +90,15 @@ export default class TCP{
     //})
   }
 
-  connect(){
+  connect(localIP:string){
     let bindAddress = {
       //TODO:改成本地wifi地址
-      address: '10.0.2.15',
+      address: localIP,
       family: 1
     }
     this.tcp.bind(bindAddress,err=>{
       if(err){
+        console.info(this.local_Ip)
         console.info('bind fail:' + err.message);
         return;
       }
@@ -145,7 +146,7 @@ export default class TCP{
         console.info("bind success")
       },200)
       setTimeout(()=>{
-        this.connect();
+        this.connect(this.local_Ip);
       },400)
       setTimeout(()=>{
         let message  = this.cache_send.getFirst();

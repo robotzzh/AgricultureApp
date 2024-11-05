@@ -15,35 +15,37 @@ export default struct  HomeComponent{
   @State farmBean : ArrayList<FarmBean> = null;
   @State farmIndex : number = 0;
   @State Select_options : ArrayList<SelectOption> = new ArrayList<SelectOption>();
-
+  @State localIp:string = '';
+  @State remoteIp:string = '';
+  @State remote_port :number =0;
   private timerId: number = 0;
-  build(){
-    Column({space:7}) {
+  build() {
+    Column({ space: 7 }) {
       Text('选择农田')
         .fontSize(24)
         .fontWeight(FontWeight.Bold)
         .fontColor(Color.Orange)
         .margin({ top: 10 })
-      Row(){
-        Select(/*[
+      Row() {
+        Select( /*[
           {value: '农田1', icon: $r('app.media.icon') },
           {value: '农田2',icon: $r('app.media.icon')},
           {value: '农田3',icon: $r('app.media.icon')},
           {value: '农田4',icon: $r('app.media.icon')}
         ]*/
-        this.Select_options.convertToArray())
+          this.Select_options.convertToArray())
           .selected(0)
           .value('选择农田')
-          .font({size:24, weight: 600})
-          .selectedOptionFont({size: 24,weight:500})
-          .optionFont({size: 24,weight:500})
-          .onSelect((index:number, text?: string | undefined)=>{
-            if(index < this.farmBean.length){
+          .font({ size: 24, weight: 600 })
+          .selectedOptionFont({ size: 24, weight: 500 })
+          .optionFont({ size: 24, weight: 500 })
+          .onSelect((index: number, text?: string | undefined) => {
+            if (index < this.farmBean.length) {
               this.farmIndex = index
               console.info(this.farmBean.length.toString())
               console.info('Select:' + index)
             }
-            else{
+            else {
               this.farmIndex = this.farmBean.length - 1
               console.info("select error")
             }
@@ -65,58 +67,58 @@ export default struct  HomeComponent{
         * */
       Divider().width('95%')
 
-      Row(){
+      Row() {
         Text('温度')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].temperature)+"度")
+        Text(String(this.farmBean[this.farmIndex].temperature) + "度")
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=>{
+      .onClick(() => {
         router.pushUrl({
-          url:"pages/Chart",
+          url: "pages/Chart",
           params: {
             usage: 'temperature',
-            data:MainViewModel.history_info[this.farmIndex].history_temperature,
+            data: MainViewModel.history_info[this.farmIndex].history_temperature,
             time_epoch: MainViewModel.history_info[this.farmIndex].time_axis,
             length: MainViewModel.history_info[this.farmIndex].history_temperature.length,
           }
         })
       })
 
-      Row(){
+      Row() {
         Text('空气湿度')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].humidity)+"%")
+        Text(String(this.farmBean[this.farmIndex].humidity) + "%")
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=>{
+      .onClick(() => {
         router.pushUrl({
-          url:"pages/Chart",
+          url: "pages/Chart",
           params: {
             usage: 'humidity',
-            data:MainViewModel.history_info[this.farmIndex].history_humidity,
+            data: MainViewModel.history_info[this.farmIndex].history_humidity,
             time_epoch: MainViewModel.history_info[this.farmIndex].time_axis,
             length: MainViewModel.history_info[this.farmIndex].history_temperature.length,
           }
         })
       })
 
-      Row(){
+      Row() {
         Text('二氧化碳浓度')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].co2)+'ppm')
+        Text(String(this.farmBean[this.farmIndex].co2) + 'ppm')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
@@ -128,16 +130,16 @@ export default struct  HomeComponent{
         })
       })
 
-      Row(){
+      Row() {
         Text('光照')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].lumination)+'Lux')
+        Text(String(this.farmBean[this.farmIndex].lumination) + 'Lux')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
@@ -149,16 +151,16 @@ export default struct  HomeComponent{
         })
       })
 
-      Row(){
+      Row() {
         Text('土壤湿度')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].soilHumidity)+'%')
+        Text(String(this.farmBean[this.farmIndex].soilHumidity) + '%')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
@@ -170,79 +172,79 @@ export default struct  HomeComponent{
         })
       })
 
-      Row(){
+      Row() {
         Text('氮含量')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].NPK[0])+'mg/kg')
+        Text(String(this.farmBean[this.farmIndex].NPK[0]) + 'mg/kg')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
             usage: 'N',
-            data: MainViewModel.to_NPK(this.farmIndex,0),
+            data: MainViewModel.to_NPK(this.farmIndex, 0),
             time_epoch: MainViewModel.history_info[this.farmIndex].time_axis,
-            length: MainViewModel.to_NPK(this.farmIndex,0).length,
+            length: MainViewModel.to_NPK(this.farmIndex, 0).length,
           }
         })
       })
 
-      Row(){
+      Row() {
         Text('磷含量')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].NPK[1])+'mg/kg')
+        Text(String(this.farmBean[this.farmIndex].NPK[1]) + 'mg/kg')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
             usage: 'P',
-            data: MainViewModel.to_NPK(this.farmIndex,1),
+            data: MainViewModel.to_NPK(this.farmIndex, 1),
             time_epoch: MainViewModel.history_info[this.farmIndex].time_axis,
-            length: MainViewModel.to_NPK(this.farmIndex,1).length,
+            length: MainViewModel.to_NPK(this.farmIndex, 1).length,
           }
         })
       })
 
-      Row(){
+      Row() {
         Text('钾含量')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].NPK[2])+'mg/kg')
+        Text(String(this.farmBean[this.farmIndex].NPK[2]) + 'mg/kg')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
             usage: 'K',
-            data: MainViewModel.to_NPK(this.farmIndex,2),
+            data: MainViewModel.to_NPK(this.farmIndex, 2),
             time_epoch: MainViewModel.history_info[this.farmIndex].time_axis,
-            length: MainViewModel.to_NPK(this.farmIndex,2).length,
+            length: MainViewModel.to_NPK(this.farmIndex, 2).length,
           }
         })
       })
 
-      Row(){
+      Row() {
         Text('电导率')
           .fontSize(24)
           .fontWeight(FontWeight.Bold)
-        Text(String(this.farmBean[this.farmIndex].conductivity)+'S/m')
+        Text(String(this.farmBean[this.farmIndex].conductivity) + 'S/m')
           .fontSize(18)
       }
       .width('95%')
       .justifyContent(FlexAlign.SpaceBetween)
-      .onClick(()=> {
+      .onClick(() => {
         router.pushUrl({
           url: "pages/Chart",
           params: {
@@ -280,20 +282,55 @@ export default struct  HomeComponent{
 
         })
         * */
-    Button('刷新')
-      .onClick(()=> {
+      Button('刷新')
+        .onClick(() => {
 
-        //let temp = new History_Info(1,'lihua','127.0.0.1',12345);
-        //temp.load();
-        MainViewModel.refresh_data(this.farmIndex);
+          //let temp = new History_Info(1,'lihua','127.0.0.1',12345);
+          //temp.load();
+          MainViewModel.refresh_data(this.farmIndex);
 
-      })
+        })
 
-    }
-    .width('100%')
-    .height('100%')
-    .backgroundColor('#f1f2f3')
+      Divider().width('95%')
+        TextInput({ placeholder: '本地IP： ' })
+          .type(InputType.Normal)
+          .backgroundColor(Color.Gray)
+          .fontSize(Color.Brown)
+          .onChange((value) => {
+            this.localIp = value
+            MainViewModel.localIP = value;
+            console.info('localIP change to '+ MainViewModel.localIP)
+          })
+        Text("本地IP:" +this.localIp)
 
+
+          TextInput({ placeholder: '传感器IP： ' })
+            .type(InputType.Normal)
+            .backgroundColor(Color.Gray)
+            .fontSize(Color.Brown)
+            .onChange((value) => {
+              this.remoteIp = value
+              this.farmBean[this.farmIndex].sensor_IP = value;
+              console.info('IP change to'+ this.farmBean[this.farmIndex].sensor_IP)
+            })
+          Text("服务器IP:" + this.remoteIp)
+
+
+            TextInput({ placeholder: '传感器端口： ' })
+              .type(InputType.Number)
+              .backgroundColor(Color.Gray)
+              .fontSize(Color.Brown)
+              .onChange((value) => {
+                this.remote_port = parseInt(value, 10);
+                this.farmBean[this.farmIndex].sensor_port = parseInt(value, 10);
+                console.info('IP change to'+ this.farmBean[this.farmIndex].sensor_port)
+              })
+            Text("服务器端口:" + this.remote_port)
+
+          }
+          .width('100%')
+          .height('100%')
+          .backgroundColor('#f1f2f3')
   }
 
   loadFarmData( sensor_ID: number){
@@ -313,6 +350,9 @@ export default struct  HomeComponent{
     this.timerId = setInterval(()=>{
       MainViewModel.refresh_data(this.farmIndex);
     },60*1000)
+    //this.localIp=MainViewModel.localIP
+    //this.remoteIp = this.farmBean[this.farmIndex].sensor_IP
+    //this.remote_port = this.farmBean[this.farmIndex].sensor_port
     //MainViewModel.close_listen();
   }
 

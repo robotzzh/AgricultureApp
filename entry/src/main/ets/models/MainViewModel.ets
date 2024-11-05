@@ -13,8 +13,8 @@ import systemDateTime from '@ohos.systemDateTime';
 
 export class MainViewModel{
 
-  private IP_address:string = '10.10.100.254';
-  private port : number = 15000;
+  //TODO:将此处IP和端口改成USR-W610对应的IP和端口
+  public localIP = '127.0.0.1'
   public farmBean : ArrayList<FarmBean> = new ArrayList();
   public history_info : ArrayList<History_Info> = new ArrayList<History_Info>();
   //public farmBean: FarmBean[] = [];
@@ -25,8 +25,9 @@ export class MainViewModel{
 
   public refresh_data(Index: number){
 //TODO:将本地IP改成wifi解码
-    let tcp =new TCP('10.0.2.15',12345,this.farmBean[Index].sensor_IP, this.farmBean[Index].sensor_port);
-    tcp.connect();
+    console.info("localIP change1 to "+this.localIP)
+    let tcp =new TCP(this.localIP,12345,this.farmBean[Index].sensor_IP, this.farmBean[Index].sensor_port);
+    tcp.connect(this.localIP);
     tcp.subscribe();
 
     connection.getAppNet(function(error, data) {
@@ -38,7 +39,7 @@ export class MainViewModel{
     // 指令寻问遍历
     CodeLIST.forEach((value,index)=>{
       setTimeout(()=> {
-        let s_tcp = new TCP('10.0.2.16', 12344, this.farmBean[Index].sensor_IP, this.farmBean[Index].sensor_port);
+        let s_tcp = new TCP(this.localIP, 12344, this.farmBean[Index].sensor_IP, this.farmBean[Index].sensor_port);
         //console.info(i.toString());
         s_tcp.join(value.code)
         s_tcp.send();

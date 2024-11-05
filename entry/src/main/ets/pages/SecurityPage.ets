@@ -25,7 +25,6 @@ struct SecurityPage {
           .fontSize(Color.Brown)
           .onChange((value)=>{
             this.history_id = value;
-
           })
         Text("ID:"+this.history_id)
         Button('删除')
